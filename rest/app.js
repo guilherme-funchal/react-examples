@@ -11,12 +11,12 @@ app.post('/user/add', (req, res) => {
     //get the new user data from post request
     const userData = req.body
     //check if the userData fields are missing
-    if (userData.fullname == null || userData.age == null || userData.username == null || userData.password == null) {
+    if (userData.id == null || userData.fullname == null || userData.age == null || userData.username == null || userData.password == null) {
         return res.status(401).send({error: true, msg: 'User data missing'})
     }
     
     //check if the username exist already
-    const findExist = existUsers.find( user => user.username === userData.username )
+    const findExist = existUsers.find( user => user.id === userData.id )
     if (findExist) {
         return res.status(409).send({error: true, msg: 'username already exist'})
     }
@@ -34,6 +34,7 @@ app.get('/user/list', (req, res) => {
 /* Update - Patch method */
 app.patch('/user/update/:username', (req, res) => {
     //get the username from url
+    const id = req.params.id
     const username = req.params.username
     //get the update data
     const userData = req.body
@@ -71,7 +72,8 @@ app.delete('/user/delete/:username', (req, res) => {
 //read the user data from json file
 const saveUserData = (data) => {
     const stringifyData = JSON.stringify(data)
-    fs.writeFileSync('users.json', stringifyData)
+//    fs.appendFile('users.json', stringifyData)
+    fs.writeFileSync('users.json', stringifyData)	
 }
 //get the user data from json file
 const getUserData = () => {
@@ -80,6 +82,6 @@ const getUserData = () => {
 }
 /* util functions ends */
 //configure the server port
-app.listen(3000, () => {
-    console.log('Server runs on port 3000')
+app.listen(3001, () => {
+    console.log('Server runs on port 3001')
 })
