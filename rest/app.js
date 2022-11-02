@@ -11,12 +11,12 @@ app.post('/user/add', (req, res) => {
     //get the new user data from post request
     const userData = req.body
     //check if the userData fields are missing
-    if (userData.id == null || userData.fullname == null || userData.age == null || userData.username == null || userData.password == null) {
+    if (userData.user_id == null || userData.profile == null || userData.desc == null || userData.email == null || userData.doc == null || userData.created_at == null || userData.updated_at == null || userData.last_login == null) {
         return res.status(401).send({error: true, msg: 'User data missing'})
     }
     
     //check if the username exist already
-    const findExist = existUsers.find( user => user.id === userData.id )
+    const findExist = existUsers.find( user => user.user_id === userData.user_id )
     if (findExist) {
         return res.status(409).send({error: true, msg: 'username already exist'})
     }
@@ -32,21 +32,28 @@ app.get('/user/list', (req, res) => {
     res.send(users)
 })
 /* Update - Patch method */
-app.patch('/user/update/:username', (req, res) => {
+app.patch('/user/update/:user_id', (req, res) => {
     //get the username from url
-    const id = req.params.id
-    const username = req.params.username
+    const user_id = req.params.user_id
+    const profile = req.params.profile
+    const desc = req.params.desc
+    const email = req.params.email
+    const type = req.params.type
+    const doc = req.params.doc
+    const created_at = req.params.created_at	
+    const updated_at = req.params.updated_at	
+    const last_login = req.params.last_login	
     //get the update data
     const userData = req.body
     //get the existing user data
     const existUsers = getUserData()
     //check if the username exist or not       
-    const findExist = existUsers.find( user => user.username === username )
+    const findExist = existUsers.find( user => user.user_id === user_id )
     if (!findExist) {
         return res.status(409).send({error: true, msg: 'username not exist'})
     }
     //filter the userdata
-    const updateUser = existUsers.filter( user => user.username !== username )
+    const updateUser = existUsers.filter( user => user.user_id !== user_id )
     //push the updated data
     updateUser.push(userData)
     //finally save it
@@ -54,12 +61,12 @@ app.patch('/user/update/:username', (req, res) => {
     res.send({success: true, msg: 'User data updated successfully'})
 })
 /* Delete - Delete method */
-app.delete('/user/delete/:username', (req, res) => {
-    const username = req.params.username
+app.delete('/user/delete/:user_id', (req, res) => {
+    const user_id = req.params.user_id
     //get the existing userdata
     const existUsers = getUserData()
     //filter the userdata to remove it
-    const filterUser = existUsers.filter( user => user.username !== username )
+    const filterUser = existUsers.filter( user => user.user_id !== user_id )
     if ( existUsers.length === filterUser.length ) {
         return res.status(409).send({error: true, msg: 'username does not exist'})
     }
