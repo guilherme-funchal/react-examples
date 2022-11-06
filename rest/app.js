@@ -59,6 +59,11 @@ app.get('/user-lista/list', (req, res) => {
     res.send(users)
 })
 
+app.get('/taxas/list', (req, res) => {
+    const users = getTaxas()
+    res.send(users)
+})
+
 app.get('/user-lista/id', (req, res) => {
     const users = getUserDataLista()
     res.send(users[0].user_id)
@@ -93,6 +98,31 @@ app.patch('/user/update/:user_id', (req, res) => {
     saveUserData(updateUser)
     res.send({success: true, msg: 'User data updated successfully'})
 })
+
+app.patch('/taxa/update/:id', (req, res) => {
+    const id = req.params.id
+    const carbono = req.params.carbono	
+    const moeda = req.params.moeda
+
+    const taxaData = req.body
+    const existTaxa = getTaxas()
+    console.log(existTaxa)
+
+    const findExist = existTaxa.find( user => user.id === id )
+
+
+    if (!findExist) {
+        return res.status(409).send({error: true, msg: 'taxa not exist'})
+    }
+    //filter the userdata
+    const updateTaxa = existTaxa.filter( user => user.id  !== id )
+    //push the updated data
+    updateTaxa.push(taxaData)
+    //finally save it
+    saveTaxa(updateTaxa)
+    res.send({success: true, msg: 'Taxa data updated successfully'})
+})
+
 /* Delete - Delete method */
 app.delete('/user/delete/:user_id', (req, res) => {
     const user_id = req.params.user_id
@@ -147,6 +177,16 @@ const getUserDataLista = () => {
     const jsonData = fs.readFileSync('users-lista.json')
     return JSON.parse(jsonData)    
 }
+
+const getTaxas = () => {
+    const jsonData = fs.readFileSync('taxas.json')
+    return JSON.parse(jsonData)    
+}
+const saveTaxa = (data) => {
+    const stringifyData = JSON.stringify(data)
+    fs.writeFileSync('taxas.json', stringifyData)	
+}
+
 
 /* util functions ends */
 //configure the server port
