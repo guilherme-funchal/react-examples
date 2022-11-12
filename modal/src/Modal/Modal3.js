@@ -11,14 +11,12 @@ import { Controller, useForm } from "react-hook-form";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
-function Modal(props) {
+const Modal = props => {
   // const closeOnEscapeKeyDown = e => {
   //   if ((e.charCode || e.keyCode) === 27) {
   //     props.onClose();
   //   }
   // };
-  console.log(props.name);
-  
   const form = useRef(null);
   const [validated, setValidated] = useState(false);
   const [firstname, setFirstname] = useState(" ");
@@ -43,13 +41,29 @@ function Modal(props) {
 
 
   const submitForm = (data) => {
+
+    console.log(data);
     form.current.reset(); 
     props.onClose();
   };
 
+  // const handleSubmit = (event) => {
+
+  //   const form = event.currentTarget;
+  //   console.log(form.checkValidity())
+  //   if (form.checkValidity() === false) {
+  //     event.preventDefault();
+  //     event.stopPropagation();
+  //   }
+
+  //   setValidated(true);
+  // };
+
   useEffect(() => {
-    console.log(props.name);
-    const teste = props.name;
+    // document.body.addEventListener("keydown", closeOnEscapeKeyDown);
+    // return function cleanup() {
+    //   document.body.removeEventListener("keydown", closeOnEscapeKeyDown);
+    // };
   }, []);
 
   return ReactDOM.createPortal(
