@@ -1,9 +1,37 @@
-import React from 'react';
 import Header from './Header';
 import Footer from './Footer';
 import Sidenav from './Sidenav';
+import Api from '../Api';
+import Table from './Tables/Table';
 
-export default function Dashboard(){ 
+import React, { useState, useEffect, useRef } from 'react';
+
+
+export default function Projetos(){ 
+    const column_tratamento = [
+        { heading: 'Codigo', value: 'id' },
+        { heading: 'Descrição', value: 'descricao' },
+        { heading: 'Situação', value: 'situacao' },
+        { heading: 'Data inicio', value: 'data_inicio' },
+        { heading: 'Data fim', value: 'data_fim' },
+        { heading: 'Valor total', value: 'valor_total' },
+        { heading: 'Saldo', value: 'saldo' },
+    ]
+
+    const getTratamentos = async (cod_paciente) => {
+        const response = await Api.get('tratamentos/' + cod_paciente);
+        setTratamentos(response.data.tabela);
+        // console.log("Total Trat->", tratamentos.lenght);
+    };
+
+    const [tratamentos, setTratamentos] = useState([]);
+
+    console.log("tratamentos->", column_tratamento)
+
+    useEffect(() => {
+        getTratamentos("74");
+    }, []);
+
     return (
         <div>
             <Header />
@@ -16,41 +44,14 @@ export default function Dashboard(){
                         <div className="row mb-2">
                             <div className="col-sm-6">
                                 <h1 className="m-0">Dashboard</h1>
-                            </div>{/* /.col */}
-                        </div>{/* /.row */}
-                    </div>{/* /.container-fluid */}
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                {/* /.content-header */}
-                {/* Main content */}
                 <section className="content">
                     <div className="container-fluid">
-                        {/* Small boxes (Stat box) */}
-                        {/* /.row */}
-                        {/* Main row */}
+                    <Table data={tratamentos} column={column_tratamento} />
                         <div className="row">
-                            {/* Left col */}
-                            <section className="col-lg-6 connectedSortable">
-                                {/* Custom tabs (Charts with tabs)*/}
-                                <div className="card">
-                                    <div className="card-header">
-                                        <h3 className="card-title">
-                                            <i className="far fa-help-alt mr-1" />
-                                             Dashboard
-                                        </h3>
-                                    </div>{/* /.card-header */}
-                                    <div className="card-body">
-                                        <div className="tab-content p-0">
-                                            {/* Morris chart - Sales */}
-                                            <div className="chart tab-pane active" id="revenue-chart" style={{ position: 'relative', height: 300 }}>
-                                                <canvas id="revenue-chart-canvas" height={300} style={{ height: 300 }} />
-                                            </div>
-                                            <div className="chart tab-pane" id="sales-chart" style={{ position: 'relative', height: 300 }}>
-                                                <canvas id="sales-chart-canvas" height={300} style={{ height: 300 }} />
-                                            </div>
-                                        </div>
-                                    </div>{/* /.card-body */}
-                                </div>
-                            </section>
                             {/* /.Left col */}
                             {/* right col (We are only adding the ID to make the widgets sortable)*/}
                             <section className="col-lg-6 connectedSortable">
